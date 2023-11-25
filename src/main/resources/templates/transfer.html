@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfert</title>
+</head>
+<body>
+
+<!-- Menu horizontal -->
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/transfer">Transfer</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/contacts">Contacts</a></li>
+        <li><a href="/logout">Log Off</a></li>
+    </ul>
+</nav>
+
+<!-- Bloc Send Money -->
+<div>
+    <h2>Send Money</h2>
+
+    <!-- Formulaire pour effectuer le transfert -->
+    <form th:action="@{/transfer}" method="post">
+        <!-- Sélection du contact -->
+        <label for="contact">Select a connection:</label>
+        <select id="contact" name="contact" required>
+            <!-- Utilisez Thymeleaf pour parcourir la liste des contacts disponibles -->
+            <option th:each="connection : ${connections}" th:value="${connection.id}" th:text="${connection.firstName} + ' ' + ${connection.lastName}"></option>
+        </select>
+
+        <!-- Montant à transférer -->
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+
+        <!-- Description/Commentaire -->
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description">
+
+        <!-- Bouton de confirmation -->
+        <button type="submit">Pay</button>
+    </form>
+</div>
+
+<!-- Tableau des transactions -->
+<div>
+    <h2>My Transactions</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Connections</th>
+            <th>Description</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Utilisez Thymeleaf pour parcourir la liste des transactions et les afficher -->
+        <tr th:each="transaction : ${transactions}">
+            <td th:text="${transaction.connection.firstName} + ' ' + ${transaction.connection.lastName}"></td>
+            <td th:text="${transaction.description}"></td>
+            <td th:text="${transaction.amount}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
