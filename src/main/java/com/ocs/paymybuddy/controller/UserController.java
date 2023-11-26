@@ -6,14 +6,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+
 
 @Controller
 public class UserController {
@@ -23,12 +26,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("user", new User());
         return "login"; // login.html
     }
 
+    @PostMapping("/login")
+    public String login(@ModelAttribute("user") User user) {
+        User utilisateurExistant = userService.findByEmail(user.getEmail());
+
+        if (utilisateurExistant != null && passwordEncoder.matches(user.getPassword(), utilisateurExistant.getPassword())) {
+            return "redirect:/transfer";
+        } else {
+            return "redirect:/login?error";
+        }
+    }
 
 
     @GetMapping("/register")
