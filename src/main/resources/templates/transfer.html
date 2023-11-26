@@ -28,7 +28,7 @@
         <!-- Sélection du contact -->
         <label for="contact">Select a connection:</label>
         <select id="contact" name="contact" required>
-            <!-- Utilisez Thymeleaf pour parcourir la liste des contacts disponibles -->
+
             <option th:each="connection : ${connections}" th:value="${connection.id}" th:text="${connection.firstName} + ' ' + ${connection.lastName}"></option>
         </select>
 
@@ -57,7 +57,7 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Utilisez Thymeleaf pour parcourir la liste des transactions et les afficher -->
+
         <tr th:each="transaction : ${transactions}">
             <td th:text="${transaction.connection.firstName} + ' ' + ${transaction.connection.lastName}"></td>
             <td th:text="${transaction.description}"></td>
