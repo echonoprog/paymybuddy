@@ -33,10 +33,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         LOGGER.info("Utilisateur trouvé : {}", user.getEmail());
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
+                .builder()
+                .username(user.getEmail())
                 .password(user.getPassword())
                 .roles("USER")
                 .build();
+
     }
 }
 

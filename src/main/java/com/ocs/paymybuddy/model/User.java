@@ -94,7 +94,7 @@ public class User {
         this.contacts = contacts;
     }
 
-    // Getters and Setters
+
 
     @Override
     public String toString() {

@@ -1,0 +1,41 @@
+
+
+
+#addContactModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+#addContactModal div {
+    background-color: #fff;
+    width: 300px;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+
+#addContactModal:target {
+    display: block;
+}
+
+
+#addContactModal a#closeAddContactModal {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+
+#addContactModal a#closeAddContactModal:hover {
+    text-decoration: underline;
+}

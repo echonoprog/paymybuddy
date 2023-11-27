@@ -29,10 +29,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/login", "/register").permitAll()
+                .antMatchers("/transfer").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .usernameParameter("email")
+                .successHandler((request, response, authentication) -> response.sendRedirect("/transfer"))
                 .permitAll()
                 .and()
                 .logout()
@@ -40,7 +43,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login?logout")
                 .permitAll();
     }
-
 
 
     @Override

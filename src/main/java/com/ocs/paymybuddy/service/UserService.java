@@ -5,6 +5,10 @@ import com.ocs.paymybuddy.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,28 +58,47 @@ public class UserService {
 
 
 
-    public void addContact(int userId, String email) {
-        // Recherche de l'utilisateur par ID
-        User user = userRepository.findById(userId).orElse(null);
+    public void addContact(@AuthenticationPrincipal UserDetails userDetails, String contactEmail) {
+        // Récupérer l'email de l'utilisateur connecté
+        String userEmail = userDetails.getUsername();
+
+        // Recherche de l'utilisateur connecté par email
+        User user = userRepository.findByEmail(userEmail);
 
         if (user != null) {
             // Recherche du contact par email
-            User contact = userRepository.findByEmail(email);
+            User contact = userRepository.findByEmail(contactEmail);
 
+            // Vérifier si le contact n'est pas déjà dans la liste des contacts de l'utilisateur
             if (contact != null && !contact.equals(user)) {
-                // Vérifier si le contact n'est pas déjà dans la liste des contacts de l'utilisateur
                 if (!user.getContacts().contains(contact)) {
-                    // Ajout contact à la liste des contacts de l'utilisateur
+                    // Ajout du contact à la liste des contacts de l'utilisateur
                     user.getContacts().add(contact);
                     userRepository.save(user);
                 } else {
                     throw new RuntimeException("Le contact est déjà dans la liste des contacts de l'utilisateur.");
                 }
             } else {
-                throw new RuntimeException("Contact introuvable");
+                throw new RuntimeException("Contact introuvable avec l'email fourni.");
             }
         } else {
-            throw new RuntimeException("Utilisateur introuvable pour l'ID fourni.");
+            throw new RuntimeException("Utilisateur introuvable pour l'email connecté.");
+        }
+    }
+
+
+
+
+
+
+
+    public List<User> getUserConnections(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user != null) {
+            return user.getContacts();
+        } else {
+            throw new RuntimeException("Utilisateur introuvable pour l'e-mail fourni.");
         }
     }
 
