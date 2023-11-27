@@ -29,21 +29,33 @@
 <div>
     <h2>Send Money</h2>
 
+    <!-- Afficher les messages d'erreur ou de succès -->
+    <div th:if="${param.error}">
+        <p style="color: red;">Erreur : ${param.error}</p>
+    </div>
+    <div th:if="${param.success}">
+        <p style="color: green;">Succès : ${param.success}</p>
+    </div>
+
+
     <!-- Formulaire pour effectuer le transfert -->
-    <form th:action="@{/transfer}" method="post">
+    <form th:action="@{/transfer}" method="post" th:object="${transaction}">
         <!-- Sélection du contact -->
         <label for="contact">Select a connection:</label>
-        <select id="contact" name="contact" required>
-            <option th:each="connection : ${connections}" th:value="${connection.id}" th:text="${connection.firstName} + ' ' + ${connection.lastName}"></option>
+        <select id="contact" name="receiver.id" required>
+            <option th:each="contact : ${user.contacts}" th:value="${contact.id}" th:text="${contact.firstName} + ' ' + ${contact.lastName}"></option>
         </select>
+
 
         <!-- Montant à transférer -->
         <label for="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" required>
+        <input type="number" id="amount" name="amount" th:field="*{amount}" required>
 
         <!-- Description/Commentaire -->
         <label for="description">Description:</label>
-        <input type="text" id="description" name="description">
+        <input type="text" id="description" name="description" th:field="*{description}">
+
+        <p>Solde actuel : <span th:text="${user.balance}"></span></p>
 
         <!-- Bouton de confirmation -->
         <button type="submit">Pay</button>
@@ -56,6 +68,9 @@
 <!-- Tableau des transactions -->
 <div>
     <h2>My Transactions</h2>
+
+
+
     <table>
         <thead>
         <tr>
@@ -65,12 +80,22 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="transaction : ${transactions}">
-            <td th:text="${transaction.connection.firstName} + ' ' + ${transaction.connection.lastName}"></td>
+        <tr th:each="transaction : ${allTransactions}" th:if="${transaction.sender.id == user.id or transaction.receiver.id == user.id}">
+            <td>
+                <span th:if="${transaction.sender.id == user.id}" th:text="${transaction.receiver.firstName + ' ' + transaction.receiver.lastName}"></span>
+                <span th:if="${transaction.receiver.id == user.id}" th:text="${transaction.sender.firstName + ' ' + transaction.sender.lastName}"></span>
+            </td>
+
             <td th:text="${transaction.description}"></td>
-            <td th:text="${transaction.amount}"></td>
+
+            <td>
+                <span th:if="${transaction.sender.id == user.id}" th:text="'-' + ${transaction.amount}"></span>
+                <span th:if="${transaction.receiver.id == user.id}" th:text="${transaction.amount}"></span>
+            </td>
         </tr>
         </tbody>
+
+
     </table>
 </div>
 
@@ -82,7 +107,6 @@
             <!-- Email du contact à ajouter -->
             <label for="emailContact">Email du contact :</label>
             <input type="email" id="emailContact" name="email" required>
-
 
             <!-- Bouton d'ajout de contact -->
             <button type="submit">Ajouter un contact</button>

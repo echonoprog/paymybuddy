@@ -4,8 +4,12 @@ import com.ocs.paymybuddy.model.Transaction;
 import com.ocs.paymybuddy.model.User;
 import com.ocs.paymybuddy.repository.TransactionRepository;
 import com.ocs.paymybuddy.repository.UserRepository;
+import io.swagger.models.Swagger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.transaction.Transactional;
 import java.util.Date;
@@ -15,42 +19,62 @@ import java.util.List;
 @Service
 public class TransactionService {
 
+    private static final Logger log = LoggerFactory.getLogger(TransactionService.class); // Ajoutez cette ligne
+
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private UserService userService;
+
     public void effectuerPaiement(Transaction transaction) {
-        // Récupération des utilisateurs impliqués dans la transaction
+        // Récupérer l'expéditeur et le destinataire de la transaction
         User sender = transaction.getSender();
         User receiver = transaction.getReceiver();
 
-        // Vérification si le destinataire est dans la liste des contacts de l'expéditeur
-        if (sender.getContacts().contains(receiver)) {
-            // Vérification si le solde de l'expéditeur est suffisant
+        // Vérifier si l'expéditeur et le destinataire ne sont pas nuls
+        if (sender != null && receiver != null) {
+
+            // Vérifier si le solde de l'expéditeur est suffisant
             float amount = transaction.getAmount();
             if (sender.getBalance() >= amount) {
-                // Calcul et ajout de la commission en utilisant la transaction
+
+                // Calculer la commission
                 float commission = calculateCommission(transaction);
                 transaction.setCommission(commission);
 
-                // Mise à jour des soldes
+                // Mettre à jour les soldes et sauvegarder la transaction
                 float totalAmount = amount + commission;
                 sender.setBalance(sender.getBalance() - totalAmount);
                 receiver.setBalance(receiver.getBalance() + amount);
-
-                // Enregistrement de la transaction et mise à jour des utilisateurs
                 transaction.setDate(new Date());
                 transactionRepository.save(transaction);
+
+                log.info("Transfert effectué avec succès. Montant: {}, De: {}, À: {}, Description: {}",
+                        transaction.getAmount(), sender.getEmail(), receiver.getEmail(), transaction.getDescription());
 
             } else {
                 throw new RuntimeException("Solde insuffisant pour effectuer le paiement.");
             }
         } else {
-            throw new RuntimeException("Le destinataire n'est pas dans la liste des contacts de l'expéditeur.");
+            // Gérer le cas où l'expéditeur ou le destinataire est nul
+            String errorMessage;
+            if (sender == null && receiver == null) {
+                errorMessage = "L'expéditeur et le destinataire de la transaction sont nuls.";
+            } else if (sender == null) {
+                errorMessage = "L'expéditeur de la transaction est nul.";
+            } else {
+                errorMessage = "Le destinataire de la transaction est nul.";
+            }
+            throw new RuntimeException(errorMessage);
         }
     }
+
+
 
     private float calculateCommission(Transaction transaction) {
         // Calcul de la commission à 5% basée sur les attributs de la transaction
