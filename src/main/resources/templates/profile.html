@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Menu horizontal -->
+<nav>
+    <ul>
+        <li><a href="/login">Home</a></li>
+        <li><a href="/transfer">Transfer</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="contacts.html">Contacts</a></li>
+        <li>
+            <!-- Ajout du bouton de déconnexion -->
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Log Off"/>
+            </form>
+        </li>
+    </ul>
+</nav>
+
+<!-- Informations du profil -->
+<div>
+    <h2>User Profile</h2>
+
+    <!-- Afficher les messages d'erreur ou de succès -->
+    <div th:if="${param.error}">
+        <p style="color: red;">Erreur : ${param.error}</p>
+    </div>
+    <div th:if="${param.success}">
+        <p style="color: green;">Succès : ${param.success}</p>
+    </div>
+
+    <!-- Afficher les informations de l'utilisateur -->
+    <p>First Name: <span th:text="${user.firstName}"></span></p>
+    <p>Last Name: <span th:text="${user.lastName}"></span></p>
+    <p>Email: <span th:text="${user.email}"></span></p>
+    <p>Balance: <span th:text="${user.balance}"></span></p>
+
+    <!-- Formulaire pour ajouter un compte bancaire -->
+    <form th:action="@{/addbankaccount}" method="post">
+        <label for="iban">IBAN:</label>
+        <input type="text" id="iban" name="iban" th:required="true">
+
+        <label for="bankName">Bank Name:</label>
+        <input type="text" id="bankName" name="bankName" th:required="true">
+
+        <button type="submit">Add Bank Account</button>
+    </form>
+
+    <!-- Afficher les messages d'erreur ou de succès pour l'ajout de compte bancaire -->
+    <div th:if="${param.error}">
+        <p style="color: red;">Erreur : ${param.error}</p>
+    </div>
+    <div th:if="${param.success}">
+        <p style="color: green;">Succès : ${param.success}</p>
+    </div>
+</div>
+
+</body>
+</html>

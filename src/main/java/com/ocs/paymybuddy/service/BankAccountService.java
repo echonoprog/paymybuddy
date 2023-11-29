@@ -7,11 +7,12 @@ import com.ocs.paymybuddy.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+
 
 @Transactional
 @Service
@@ -25,29 +26,25 @@ public class BankAccountService {
     @Autowired
     private UserRepository userRepository;
 
-    public void addBankAccount(int userId, BankAccount bankAccount) {
-        User user = userRepository.findById(userId).orElse(null);
+    public void addBankAccount(@AuthenticationPrincipal UserDetails userDetails, BankAccount bankAccount) {
+        String userEmail = userDetails.getUsername();
+        User user = userRepository.findByEmail(userEmail);
 
         if (user != null) {
+
+            if (bankAccount.getIban() == null || bankAccount.getBankName() == null) {
+                throw new IllegalArgumentException("L'IBAN et le nom de la banque sont requis.");
+            }
+
             bankAccount.setUser(user);
             bankAccountRepository.save(bankAccount);
-            log.info("Compte bancaire ajouté avec succès pour l'utilisateur avec l'ID : {}", userId);
+            log.info("Compte bancaire ajouté avec succès pour l'utilisateur avec l'ID : {}", user.getId());
         } else {
-            log.error("Utilisateur avec l'ID {} non trouvé. Impossible d'ajouter le compte bancaire.", userId);
-
+            log.error("Utilisateur avec l'e-mail {} non trouvé. Impossible d'ajouter le compte bancaire.", userEmail);
         }
     }
 
-    public List<BankAccount> getBankAccountsByUserId(int userId) {
-        User user = userRepository.findById(userId).orElse(null);
 
-        if (user != null) {
-            return bankAccountRepository.findByUser(user);
-        } else {
-            log.error("Utilisateur avec l'ID {} non trouvé. Impossible de récupérer la liste des comptes bancaires.", userId);
-            return null;
-        }
-    }
 
 
 }

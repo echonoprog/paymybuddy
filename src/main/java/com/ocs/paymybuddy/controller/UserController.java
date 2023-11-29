@@ -5,9 +5,7 @@ import com.ocs.paymybuddy.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -76,7 +74,7 @@ public class UserController {
     @PostMapping("/addContact")
     public String addContact(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("email") String contactEmail, Model model) {
         try {
-            // Appel de la méthode addContact du service avec le principal et l'email du contact
+
             userService.addContact(userDetails, contactEmail);
 
             model.addAttribute("success", "Contact added successfully!");

@@ -55,7 +55,6 @@ public class TransactionController {
     }
 
 
-
     @PostMapping("/transfer")
     public String transfer(@AuthenticationPrincipal UserDetails userDetails, @ModelAttribute Transaction transaction) {
         if (userDetails != null) {
@@ -84,5 +83,4 @@ public class TransactionController {
             return "redirect:/login";
         }
     }
-
 }

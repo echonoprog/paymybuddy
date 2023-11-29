@@ -12,10 +12,10 @@
 <!-- Menu horizontal -->
 <nav>
     <ul>
-        <li><a href="/">Home</a></li>
+        <li><a href="/login">Home</a></li>
         <li><a href="/transfer">Transfer</a></li>
         <li><a href="/profile">Profile</a></li>
-        <li><a href="/contacts">Contacts</a></li>
+        <li><a href="contacts.html">Contacts</a></li>
         <li>
             <!-- Ajout du bouton de déconnexion -->
             <form th:action="@{/logout}" method="post">
@@ -48,8 +48,8 @@
 
 
         <!-- Montant à transférer -->
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" th:field="*{amount}" required>
+        <label for="amount">Montant :</label>
+        <input type="text" id="amount" name="amount" pattern="^\d+(\.\d{1,2})?$" title="Saisissez un nombre valide avec jusqu'à deux décimales" required min="0">
 
         <!-- Description/Commentaire -->
         <label for="description">Description:</label>
