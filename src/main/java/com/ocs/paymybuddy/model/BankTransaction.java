@@ -72,7 +72,6 @@ public class BankTransaction {
     @Column(name = "credit")
     private boolean credit;
 
-
     @Override
     public String toString() {
         return "BankTransaction{" +

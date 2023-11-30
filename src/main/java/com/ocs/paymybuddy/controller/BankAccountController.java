@@ -15,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import java.util.List;
 
 @Controller
@@ -29,8 +28,6 @@ public class BankAccountController {
     @Autowired
     private BankAccountService bankAccountService;
 
-
-
     @GetMapping("/profile")
     public String showUserProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByEmail(userDetails.getUsername());
@@ -41,8 +38,6 @@ public class BankAccountController {
         model.addAttribute("user", user);
         model.addAttribute("userBankAccounts", userBankAccounts);
         model.addAttribute("bankTransaction", new BankTransaction());
-
-
         return "profile";
     }
 
@@ -65,6 +60,5 @@ public class BankAccountController {
         }
         return "redirect:/profile";
     }
-
 
 }

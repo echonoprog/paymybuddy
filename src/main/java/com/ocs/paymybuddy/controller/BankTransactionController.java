@@ -43,7 +43,6 @@ public class BankTransactionController {
         model.addAttribute("user", user);
         model.addAttribute("userBankAccounts", userBankAccounts);
         model.addAttribute("transactionBank", new BankTransaction());
-
         return "transactionbank";
     }
 

@@ -23,7 +23,6 @@ public class TransactionController {
 
     private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
 
-
     @Autowired
     private UserService userService;
 

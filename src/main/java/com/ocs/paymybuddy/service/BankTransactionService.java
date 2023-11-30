@@ -22,11 +22,7 @@ public class BankTransactionService {
 
     @Autowired
     private UserRepository userRepository;
-
-
     private static final Logger log = LoggerFactory.getLogger(BankTransactionService.class);
-
-
     public BankTransaction save(BankTransaction transaction) {
 
         if (transaction == null) {
