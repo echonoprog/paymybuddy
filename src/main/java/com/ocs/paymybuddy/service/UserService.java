@@ -52,8 +52,6 @@ public class UserService {
         }
     }
 
-
-
     public void addContact(@AuthenticationPrincipal UserDetails userDetails, String contactEmail) {
 
         String userEmail = userDetails.getUsername();
@@ -122,7 +120,6 @@ public class UserService {
 
         if (userId.isPresent()) {
             User user = userId.get();
-
             // Supprimer l'utilisateur de la base de données
             userRepository.delete(user);
         } else {

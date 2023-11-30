@@ -55,7 +55,6 @@ public class BankAccount {
         this.user = user;
     }
 
-    // Autres méthodes...
 
     @Override
     public String toString() {

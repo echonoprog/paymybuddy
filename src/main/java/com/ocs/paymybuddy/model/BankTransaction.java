@@ -73,7 +73,6 @@ public class BankTransaction {
     private boolean credit;
 
 
-
     @Override
     public String toString() {
         return "BankTransaction{" +

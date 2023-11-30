@@ -21,12 +21,8 @@ public class TransactionService {
 
     private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
 
-
-
-
     @Autowired
     private TransactionRepository transactionRepository;
-
 
 
     public void effectuerPaiement(Transaction transaction) {
@@ -34,17 +30,13 @@ public class TransactionService {
         User sender = transaction.getSender();
         User receiver = transaction.getReceiver();
 
-
         if (sender != null && receiver != null) {
-
-
             float amount = transaction.getAmount();
             if (sender.getBalance() >= amount) {
 
 
                 float commission = calculateCommission(transaction);
                 transaction.setCommission(commission);
-
 
                 float totalAmount = amount + commission;
                 sender.setBalance(sender.getBalance() - totalAmount);
@@ -59,7 +51,6 @@ public class TransactionService {
                 throw new RuntimeException("Solde insuffisant pour effectuer le paiement.");
             }
         } else {
-
             String errorMessage;
             if (sender == null && receiver == null) {
                 errorMessage = "L'expéditeur et le destinataire de la transaction sont nuls.";
@@ -72,14 +63,11 @@ public class TransactionService {
         }
     }
 
-
-
     private float calculateCommission(Transaction transaction) {
         return transaction.getAmount() * 0.05f;
     }
 
     public List<Transaction> findAllTransactionsSentByUser(int userId) {
-
         return transactionRepository.findAllBySender_Id(userId);
     }
 
@@ -90,6 +78,5 @@ public class TransactionService {
     public List<Transaction> findAllTransactions() {
         return transactionRepository.findAll();
     }
-
 
 }

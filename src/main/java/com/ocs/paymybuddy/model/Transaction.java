@@ -90,8 +90,6 @@ public class Transaction {
         this.description = description;
     }
 
-    // Getters and Setters
-
     @Override
     public String toString() {
         return "Transaction{" +

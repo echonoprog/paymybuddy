@@ -95,8 +95,6 @@ public class User {
         this.contacts = contacts;
     }
 
-
-
     @Override
     public String toString() {
         return "User{" +
