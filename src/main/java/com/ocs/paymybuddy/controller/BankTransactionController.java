@@ -53,15 +53,8 @@ public class BankTransactionController {
                                      Model model) {
         try {
 
-
-
             BankTransaction savedTransaction = bankTransactionService.save(bankTransaction);
-
-
             log.info("Saved transaction details: {}", savedTransaction);
-
-
-
             if (savedTransaction != null) {
                 model.addAttribute("success", "Transaction completed successfully!");
             } else {

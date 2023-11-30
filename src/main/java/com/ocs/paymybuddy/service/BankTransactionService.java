@@ -33,18 +33,12 @@ public class BankTransactionService {
             log.error("La transaction est nulle.");
             return null;
         }
-
         BankAccount bankAccount = transaction.getBankAccount();
-
-
         if (bankAccount == null) {
             log.error("Le compte bancaire est nul dans la transaction.");
             return null;
         }
-
         User user = bankAccount.getUser();
-
-
         if (user == null) {
             log.error("L'utilisateur est nul dans le compte bancaire.");
             return null;
@@ -72,9 +66,7 @@ public class BankTransactionService {
         bankTransactionRepository.save(transaction);
         userRepository.save(user);
 
-
         log.info("Transaction enregistrée avec succès.");
-
         return transaction;
     }
 }

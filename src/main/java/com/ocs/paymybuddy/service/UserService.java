@@ -41,8 +41,6 @@ public class UserService {
 
             // Encoder MDP avant enregistrement dans la BDD
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-
             User savedUser = userRepository.save(user);
 
             log.info("Utilisateur enregistré avec succès : {}", savedUser);
@@ -59,10 +57,7 @@ public class UserService {
     public void addContact(@AuthenticationPrincipal UserDetails userDetails, String contactEmail) {
 
         String userEmail = userDetails.getUsername();
-
-
         User user = userRepository.findByEmail(userEmail);
-
         if (user != null) {
 
             User contact = userRepository.findByEmail(contactEmail);
@@ -83,7 +78,6 @@ public class UserService {
             throw new RuntimeException("Utilisateur introuvable pour l'email connecté.");
         }
     }
-
 
     public List<User> getUserConnections(String email) {
         User user = userRepository.findByEmail(email);
@@ -155,12 +149,10 @@ public class UserService {
         User existingUser = userRepository.findById(Id).orElse(null);
 
         if (existingUser != null) {
-
             existingUser.setFirstName(user.getFirstName());
             existingUser.setLastName(user.getLastName());
             existingUser.setEmail(user.getEmail());
             existingUser.setBalance(user.getBalance());
-
 
             return userRepository.save(existingUser);
         } else {

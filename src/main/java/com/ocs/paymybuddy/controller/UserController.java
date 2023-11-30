@@ -76,7 +76,6 @@ public class UserController {
         try {
 
             userService.addContact(userDetails, contactEmail);
-
             model.addAttribute("success", "Contact added successfully!");
         } catch (RuntimeException e) {
             LOGGER.error("Failed to add contact", e);
@@ -84,9 +83,5 @@ public class UserController {
         }
         return "redirect:/transfer";
     }
-
-
-
-
 
 }

@@ -48,10 +48,7 @@ public class BankAccountService {
 
     public List<BankAccount> getUserBankAccounts(User user) {
         List<BankAccount> userBankAccounts = bankAccountRepository.findByUser(user);
-
-
         log.info("Nombre de comptes bancaires pour l'utilisateur {} : {}", user.getEmail(), userBankAccounts.size());
-
         return userBankAccounts;
     }
 

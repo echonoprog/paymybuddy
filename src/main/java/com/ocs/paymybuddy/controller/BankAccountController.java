@@ -48,9 +48,7 @@ public class BankAccountController {
 
     @GetMapping("/addbankaccount")
     public String showAddBankAccountForm(Model model) {
-
         model.addAttribute("bankAccount", new BankAccount());
-
         return "addbankaccount";
     }
 
@@ -60,7 +58,6 @@ public class BankAccountController {
                                  Model model) {
         try {
             bankAccountService.addBankAccount(userDetails, bankAccount);
-
             model.addAttribute("success", "Bank account added successfully!");
         } catch (RuntimeException e) {
             log.error("Failed to add bank account", e);
