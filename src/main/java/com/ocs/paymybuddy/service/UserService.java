@@ -33,7 +33,7 @@ public class UserService {
         log.info("Enregistrement de l'utilisateur : {}", user);
 
         try {
-            // Vérifier si l'e-mail est déjà utilisé
+
             if (userRepository.findByEmail(user.getEmail()) != null) {
                 log.error("Échec de l'enregistrement - Cet e-mail est déjà utilisé : {}", user.getEmail());
                 throw new RuntimeException("Cet e-mail est déjà utilisé.");
@@ -42,7 +42,7 @@ public class UserService {
             // Encoder MDP avant enregistrement dans la BDD
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-            // Enregistrement utilisateur
+
             User savedUser = userRepository.save(user);
 
             log.info("Utilisateur enregistré avec succès : {}", savedUser);
@@ -57,14 +57,14 @@ public class UserService {
 
 
     public void addContact(@AuthenticationPrincipal UserDetails userDetails, String contactEmail) {
-        // Récupérer l'email de l'utilisateur connecté
+
         String userEmail = userDetails.getUsername();
 
-        // Recherche de l'utilisateur connecté par email
+
         User user = userRepository.findByEmail(userEmail);
 
         if (user != null) {
-            // Recherche du contact par email
+
             User contact = userRepository.findByEmail(contactEmail);
 
             // Vérifier si le contact n'est pas déjà dans la liste des contacts de l'utilisateur
@@ -83,11 +83,6 @@ public class UserService {
             throw new RuntimeException("Utilisateur introuvable pour l'email connecté.");
         }
     }
-
-
-
-
-
 
 
     public List<User> getUserConnections(String email) {

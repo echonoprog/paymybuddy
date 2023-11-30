@@ -30,6 +30,7 @@ public class User {
     @Column(name = "balance")
     private float balance;
 
+
     @ManyToMany
     @JoinTable(
             name = "user_contacts",

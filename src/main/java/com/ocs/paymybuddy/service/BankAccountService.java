@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 
 @Transactional
@@ -45,6 +46,13 @@ public class BankAccountService {
     }
 
 
+    public List<BankAccount> getUserBankAccounts(User user) {
+        List<BankAccount> userBankAccounts = bankAccountRepository.findByUser(user);
 
+
+        log.info("Nombre de comptes bancaires pour l'utilisateur {} : {}", user.getEmail(), userBankAccounts.size());
+
+        return userBankAccounts;
+    }
 
 }

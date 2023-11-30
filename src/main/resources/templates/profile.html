@@ -42,6 +42,8 @@
     <p>Last Name: <span th:text="${user.lastName}"></span></p>
     <p>Email: <span th:text="${user.email}"></span></p>
     <p>Balance: <span th:text="${user.balance}"></span></p>
+    <p th:if="${userBankAccounts != null}">Nombre de comptes bancaires : <span th:text="${userBankAccounts.size()}"></span></p>
+    <p th:unless="${userBankAccounts != null}">La liste des comptes bancaires est null</p>
 
     <!-- Formulaire pour ajouter un compte bancaire -->
     <form th:action="@{/addbankaccount}" method="post">
@@ -61,6 +63,35 @@
     <div th:if="${param.success}">
         <p style="color: green;">Succès : ${param.success}</p>
     </div>
+</div>
+
+<!-- Formulaire pour effectuer une transaction -->
+<div>
+    <h2>Transaction</h2>
+
+    <!-- Afficher les messages d'erreur ou de succès -->
+    <div th:if="${param.error}">
+        <p style="color: red;">Erreur : ${param.error}</p>
+    </div>
+    <div th:if="${param.success}">
+        <p style="color: green;">Succès : ${param.success}</p>
+    </div>
+
+    <!-- Formulaire pour effectuer une transaction -->
+    <form th:action="@{/transactionbank}" method="post" th:object="${bankTransaction}">
+        <label for="bankAccount">Choisissez le compte bancaire :</label>
+        <select id="bankAccount" name="bankAccount" th:required="true">
+            <option th:each="account : ${userBankAccounts}" th:value="${account.id}" th:text="${account.bankName + ' - ' + account.iban}"></option>
+        </select>
+
+        <label for="amountbank">Montant :</label>
+        <input type="text" id="amountbank" name="amountbank" th:field="*{amountbank}" th:required="true">
+
+        <label for="credit">Crédit :</label>
+        <input type="checkbox" id="credit" name="credit" th:field="*{credit}">
+
+        <button type="submit">Effectuer la transaction</button>
+    </form>
 </div>
 
 </body>

@@ -1,6 +1,7 @@
 package com.ocs.paymybuddy.controller;
 
 import com.ocs.paymybuddy.model.BankAccount;
+import com.ocs.paymybuddy.model.BankTransaction;
 import com.ocs.paymybuddy.model.User;
 import com.ocs.paymybuddy.service.BankAccountService;
 import com.ocs.paymybuddy.service.UserService;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class BankAccountController {
 
@@ -27,14 +30,22 @@ public class BankAccountController {
     private BankAccountService bankAccountService;
 
 
+
     @GetMapping("/profile")
     public String showUserProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-
         User user = userService.findByEmail(userDetails.getUsername());
+        List<BankAccount> userBankAccounts = bankAccountService.getUserBankAccounts(user);
+
+        log.info("Nombre de comptes bancaires de l'utilisateur : {}", userBankAccounts.size());
+
         model.addAttribute("user", user);
+        model.addAttribute("userBankAccounts", userBankAccounts);
+        model.addAttribute("bankTransaction", new BankTransaction());
+
 
         return "profile";
     }
+
     @GetMapping("/addbankaccount")
     public String showAddBankAccountForm(Model model) {
 

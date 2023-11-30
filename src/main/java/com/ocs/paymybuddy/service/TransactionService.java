@@ -19,35 +19,33 @@ import java.util.List;
 @Service
 public class TransactionService {
 
-    private static final Logger log = LoggerFactory.getLogger(TransactionService.class); // Ajoutez cette ligne
+    private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
 
 
-    @Autowired
-    private UserRepository userRepository;
+
 
     @Autowired
     private TransactionRepository transactionRepository;
 
-    @Autowired
-    private UserService userService;
+
 
     public void effectuerPaiement(Transaction transaction) {
-        // Récupérer l'expéditeur et le destinataire de la transaction
+
         User sender = transaction.getSender();
         User receiver = transaction.getReceiver();
 
-        // Vérifier si l'expéditeur et le destinataire ne sont pas nuls
+
         if (sender != null && receiver != null) {
 
-            // Vérifier si le solde de l'expéditeur est suffisant
+
             float amount = transaction.getAmount();
             if (sender.getBalance() >= amount) {
 
-                // Calculer la commission
+
                 float commission = calculateCommission(transaction);
                 transaction.setCommission(commission);
 
-                // Mettre à jour les soldes et sauvegarder la transaction
+
                 float totalAmount = amount + commission;
                 sender.setBalance(sender.getBalance() - totalAmount);
                 receiver.setBalance(receiver.getBalance() + amount);
@@ -61,7 +59,7 @@ public class TransactionService {
                 throw new RuntimeException("Solde insuffisant pour effectuer le paiement.");
             }
         } else {
-            // Gérer le cas où l'expéditeur ou le destinataire est nul
+
             String errorMessage;
             if (sender == null && receiver == null) {
                 errorMessage = "L'expéditeur et le destinataire de la transaction sont nuls.";
@@ -77,22 +75,19 @@ public class TransactionService {
 
 
     private float calculateCommission(Transaction transaction) {
-        // Calcul de la commission à 5% basée sur les attributs de la transaction
         return transaction.getAmount() * 0.05f;
     }
 
     public List<Transaction> findAllTransactionsSentByUser(int userId) {
-        // Récupérer toutes les transactions où l'utilisateur est l'émetteur
+
         return transactionRepository.findAllBySender_Id(userId);
     }
 
     public List<Transaction> findAllTransactionsReceivedByUser(int userId) {
-        // Récupérer toutes les transactions où l'utilisateur est le récepteur
         return transactionRepository.findAllByReceiver_Id(userId);
     }
 
     public List<Transaction> findAllTransactions() {
-        // Récupérer toutes les transactions
         return transactionRepository.findAll();
     }
 

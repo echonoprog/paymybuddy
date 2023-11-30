@@ -1,14 +1,19 @@
 package com.ocs.paymybuddy.service;
 
 import com.ocs.paymybuddy.model.BankTransaction;
+import com.ocs.paymybuddy.model.BankAccount;
 import com.ocs.paymybuddy.model.User;
 import com.ocs.paymybuddy.repository.BankTransactionRepository;
 import com.ocs.paymybuddy.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 
+@Transactional
 @Service
 public class BankTransactionService {
 
@@ -18,41 +23,57 @@ public class BankTransactionService {
     @Autowired
     private UserRepository userRepository;
 
+
+    private static final Logger log = LoggerFactory.getLogger(BankTransactionService.class);
+
+
     public BankTransaction save(BankTransaction transaction) {
-        // Vérifier si la transaction ou l'utilisateur associé est nul
-        if (transaction == null || transaction.getBankAccount() == null || transaction.getBankAccount().getUser() == null) {
+
+        if (transaction == null) {
+            log.error("La transaction est nulle.");
             return null;
         }
 
-        // Récupérer l'utilisateur associé à la transaction
-        User user = transaction.getBankAccount().getUser();
+        BankAccount bankAccount = transaction.getBankAccount();
 
-        // Vérifier si la transaction est un crédit ou un débit
-        float transactionAmount = transaction.getAmountbank();
+
+        if (bankAccount == null) {
+            log.error("Le compte bancaire est nul dans la transaction.");
+            return null;
+        }
+
+        User user = bankAccount.getUser();
+
+
+        if (user == null) {
+            log.error("L'utilisateur est nul dans le compte bancaire.");
+            return null;
+        }
+
+        float montantTransaction = transaction.getAmountbank();
         if (transaction.isCredit()) {
-            // Calculer le nouveau solde en cas de crédit
-            float nouveauSolde = user.getBalance() + transactionAmount;
+            float nouveauSolde = user.getBalance() + montantTransaction;
             user.setBalance(nouveauSolde);
         } else {
-            // Calculer le nouveau solde en cas de débit
-            float nouveauSolde = user.getBalance() - transactionAmount;
+            float nouveauSolde = user.getBalance() - montantTransaction;
+            // Vérifier si le solde devient négatif après la transaction
             if (nouveauSolde < 0) {
-                // Solde insuffisant, transaction annulée
+                log.warn("Solde insuffisant pour effectuer la transaction.");
                 return null;
             }
             user.setBalance(nouveauSolde);
         }
 
-        // Définir la date de la transaction à la date actuelle si elle n'est pas déjà définie
         if (transaction.getDate() == null) {
             transaction.setDate(new Date());
         }
 
-        // Enregistrer la transaction dans la base de données
+        transaction.setUser(user);
         bankTransactionRepository.save(transaction);
-
-        // Mettre à jour le solde de l'utilisateur dans la base de données
         userRepository.save(user);
+
+
+        log.info("Transaction enregistrée avec succès.");
 
         return transaction;
     }
