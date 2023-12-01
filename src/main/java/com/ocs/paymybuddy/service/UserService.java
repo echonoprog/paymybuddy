@@ -141,21 +141,18 @@ public class UserService {
         }
     }
 
-    public User updateUser(int Id, User user) {
+    public void updateUser(String userEmail, User updatedUser) {
+        User user = userRepository.findByEmail(userEmail);
 
-        User existingUser = userRepository.findById(Id).orElse(null);
-
-        if (existingUser != null) {
-            existingUser.setFirstName(user.getFirstName());
-            existingUser.setLastName(user.getLastName());
-            existingUser.setEmail(user.getEmail());
-            existingUser.setBalance(user.getBalance());
-
-            return userRepository.save(existingUser);
+        if (user != null) {
+            user.setFirstName(updatedUser.getFirstName());
+            user.setLastName(updatedUser.getLastName());
+            userRepository.save(user);
         } else {
-            throw new RuntimeException("Utilisateur introuvable pour l'ID fourni.");
+            throw new RuntimeException("Utilisateur introuvable pour l'e-mail fourni.");
         }
     }
+
 }
 
 

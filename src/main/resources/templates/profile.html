@@ -65,6 +65,30 @@
     </div>
 </div>
 
+<!-- Formulaire pour mettre à jour le profil -->
+<div>
+    <h2>Mettre à jour le profil</h2>
+
+    <!-- Afficher les messages d'erreur ou de succès pour la mise à jour du profil -->
+    <div th:if="${param.error}">
+        <p style="color: red;">Erreur : ${param.error}</p>
+    </div>
+    <div th:if="${param.success}">
+        <p style="color: green;">Succès : ${param.success}</p>
+    </div>
+
+    <!-- Formulaire pour mettre à jour le profil -->
+    <form th:action="@{/updateprofile}" method="post" th:object="${user}">
+        <label for="firstName">Prénom :</label>
+        <input type="text" id="firstName" name="firstName" th:value="${user.firstName}" th:required="true">
+
+        <label for="lastName">Nom :</label>
+        <input type="text" id="lastName" name="lastName" th:value="${user.lastName}" th:required="true">
+
+        <button type="submit">Mettre à jour le profil</button>
+    </form>
+</div>
+
 <!-- Formulaire pour effectuer une transaction -->
 <div>
     <h2>Transaction</h2>

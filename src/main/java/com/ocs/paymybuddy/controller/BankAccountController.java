@@ -60,5 +60,25 @@ public class BankAccountController {
         }
         return "redirect:/profile";
     }
+    @GetMapping("/updateprofile")
+    public String showUpdateProfileForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findByEmail(userDetails.getUsername());
+        model.addAttribute("user", user);
+        return "updateprofile";
+    }
+
+    @PostMapping("/updateprofile")
+    public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
+                                @ModelAttribute("user") User updatedUser,
+                                Model model) {
+        try {
+            userService.updateUser(userDetails.getUsername(), updatedUser);
+            model.addAttribute("success", "Profile updated successfully!");
+        } catch (RuntimeException e) {
+            log.error("Failed to update profile", e);
+            model.addAttribute("error", "Failed to update profile: " + e.getMessage());
+        }
+        return "redirect:/profile";
+    }
 
 }
