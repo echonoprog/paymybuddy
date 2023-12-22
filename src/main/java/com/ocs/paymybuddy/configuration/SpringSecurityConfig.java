@@ -35,7 +35,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .usernameParameter("email")
-                .successHandler((request, response, authentication) -> response.sendRedirect("/transfer"))
+                .successHandler((request, response, authentication) -> response.sendRedirect("/home"))
                 .permitAll()
                 .and()
                 .logout()
@@ -43,7 +43,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login?logout")
                 .permitAll();
     }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

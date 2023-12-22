@@ -29,6 +29,12 @@ public class UserController {
         return "login"; // login.html
     }
 
+    @GetMapping("/home")
+    public String home(Model model) {
+        model.addAttribute("welcomeMessage", "Bienvenue sur notre application!");
+        return "home";
+    }
+
     @PostMapping("/login")
     public String login(@ModelAttribute("user") User user, Model model) {
         System.out.println("Email from form: " + user.getEmail());

@@ -6,6 +6,10 @@ import com.ocs.paymybuddy.repository.TransactionRepository;
 import com.ocs.paymybuddy.repository.UserRepository;
 import io.swagger.models.Swagger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
@@ -78,5 +82,11 @@ public class TransactionService {
     public List<Transaction> findAllTransactions() {
         return transactionRepository.findAll();
     }
+
+    public Page<Transaction> findPaginatedTransactionsByUser(int userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
+        return transactionRepository.findAllBySender_IdOrReceiver_Id(userId, userId, pageable);
+    }
+
 
 }

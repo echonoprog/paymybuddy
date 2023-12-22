@@ -5,118 +5,139 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 </head>
 <body>
 
-<!-- Menu horizontal -->
-<nav>
-    <ul>
-        <li><a href="/login">Home</a></li>
-        <li><a href="/transfer">Transfer</a></li>
-        <li><a href="/profile">Profile</a></li>
-        <li><a href="contacts.html">Contacts</a></li>
-        <li>
-            <!-- Ajout du bouton de déconnexion -->
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Log Off"/>
-            </form>
-        </li>
-    </ul>
+<!-- Barre de navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Profile</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/transfer">Transfer</a></li>
+                <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
+                <li class="nav-item">
+                    <form class="nav-link" th:action="@{/logout}" method="post">
+                        <input type="submit" class="btn btn-link" value="Log Off"/>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
 </nav>
 
 <!-- Informations du profil -->
-<div>
-    <h2>User Profile</h2>
+<div class="container mt-5">
+    <div class="card col-md-6 mx-auto">
+        <div class="card-header bg-secondary text-white text-center">
+            <h4 style="font-size: 1.5rem;">User Profile</h4>
+        </div>
+        <div class="card-body">
+            <!-- Contenu spécifique à la section User Profile -->
+            <p class="mb-2">First Name: <span th:text="${user.firstName}"></span></p>
+            <p class="mb-2">Last Name: <span th:text="${user.lastName}"></span></p>
+            <p class="mb-2">Email: <span th:text="${user.email}"></span></p>
+            <p class="mb-2">Balance: <span th:text="${user.balance}"></span></p>
 
-    <!-- Afficher les messages d'erreur ou de succès -->
-    <div th:if="${param.error}">
-        <p style="color: red;">Erreur : ${param.error}</p>
-    </div>
-    <div th:if="${param.success}">
-        <p style="color: green;">Succès : ${param.success}</p>
-    </div>
+            <!-- Formulaire pour ajouter un compte bancaire -->
+            <form th:action="@{/addbankaccount}" method="post" class="mb-3">
+                <label for="iban">IBAN:</label>
+                <input type="text" id="iban" name="iban" th:required="true" class="form-control mb-2">
 
-    <!-- Afficher les informations de l'utilisateur -->
-    <p>First Name: <span th:text="${user.firstName}"></span></p>
-    <p>Last Name: <span th:text="${user.lastName}"></span></p>
-    <p>Email: <span th:text="${user.email}"></span></p>
-    <p>Balance: <span th:text="${user.balance}"></span></p>
-    <p th:if="${userBankAccounts != null}">Nombre de comptes bancaires : <span th:text="${userBankAccounts.size()}"></span></p>
-    <p th:unless="${userBankAccounts != null}">La liste des comptes bancaires est null</p>
+                <label for="bankName">Bank Name:</label>
+                <input type="text" id="bankName" name="bankName" th:required="true" class="form-control mb-2">
 
-    <!-- Formulaire pour ajouter un compte bancaire -->
-    <form th:action="@{/addbankaccount}" method="post">
-        <label for="iban">IBAN:</label>
-        <input type="text" id="iban" name="iban" th:required="true">
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Add Bank Account</button>
+                </div>
+            </form>
 
-        <label for="bankName">Bank Name:</label>
-        <input type="text" id="bankName" name="bankName" th:required="true">
-
-        <button type="submit">Add Bank Account</button>
-    </form>
-
-    <!-- Afficher les messages d'erreur ou de succès pour l'ajout de compte bancaire -->
-    <div th:if="${param.error}">
-        <p style="color: red;">Erreur : ${param.error}</p>
-    </div>
-    <div th:if="${param.success}">
-        <p style="color: green;">Succès : ${param.success}</p>
+            <!-- Messages d'erreur ou de succès pour l'ajout de compte bancaire -->
+            <div th:if="${param.error}" class="mb-3">
+                <p style="color: red;">Erreur : ${param.error}</p>
+            </div>
+            <div th:if="${param.success}" class="mb-3">
+                <p style="color: green;">Succès : ${param.success}</p>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Formulaire pour mettre à jour le profil -->
-<div>
-    <h2>Mettre à jour le profil</h2>
+<div class="container mt-5">
+    <div class="card col-md-6 mx-auto">
+        <div class="card-header bg-secondary text-white text-center">
+            <h4 style="font-size: 1.5rem;">Update Profile</h4>
+        </div>
+        <div class="card-body">
 
-    <!-- Afficher les messages d'erreur ou de succès pour la mise à jour du profil -->
-    <div th:if="${param.error}">
-        <p style="color: red;">Erreur : ${param.error}</p>
+            <form th:action="@{/updateprofile}" method="post" th:object="${user}" class="mb-3">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" th:value="${user.firstName}" th:required="true" class="form-control mb-2">
+
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" th:value="${user.lastName}" th:required="true" class="form-control mb-2">
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+            </form>
+
+            <!-- Messages d'erreur ou de succès pour la mise à jour du profil -->
+            <div th:if="${param.error}" class="mb-3">
+                <p style="color: red;">Erreur : ${param.error}</p>
+            </div>
+            <div th:if="${param.success}" class="mb-3">
+                <p style="color: green;">Succès : ${param.success}</p>
+            </div>
+        </div>
     </div>
-    <div th:if="${param.success}">
-        <p style="color: green;">Succès : ${param.success}</p>
-    </div>
-
-    <!-- Formulaire pour mettre à jour le profil -->
-    <form th:action="@{/updateprofile}" method="post" th:object="${user}">
-        <label for="firstName">Prénom :</label>
-        <input type="text" id="firstName" name="firstName" th:value="${user.firstName}" th:required="true">
-
-        <label for="lastName">Nom :</label>
-        <input type="text" id="lastName" name="lastName" th:value="${user.lastName}" th:required="true">
-
-        <button type="submit">Mettre à jour le profil</button>
-    </form>
 </div>
 
 <!-- Formulaire pour effectuer une transaction -->
-<div>
-    <h2>Transaction</h2>
+<div class="container mt-5 mb-5">
+    <div class="card col-md-6 mx-auto">
+        <div class="card-header bg-secondary text-white text-center">
+            <h4 style="font-size: 1.5rem;">Transaction</h4>
+        </div>
+        <div class="card-body">
 
-    <!-- Afficher les messages d'erreur ou de succès -->
-    <div th:if="${param.error}">
-        <p style="color: red;">Erreur : ${param.error}</p>
+            <form th:action="@{/transactionbank}" method="post" th:object="${bankTransaction}" class="mb-3">
+                <label for="bankAccount">Choose bank account:</label>
+                <select id="bankAccount" name="bankAccount" th:required="true" class="form-select mb-2">
+                    <option th:each="account : ${userBankAccounts}" th:value="${account.id}" th:text="${account.bankName + ' - ' + account.iban}"></option>
+                </select>
+
+                <label for="amountbank">Amount:</label>
+                <input type="text" id="amountbank" name="amountbank" th:field="*{amountbank}" th:required="true" class="form-control mb-2">
+
+                <label for="credit">Credit:</label>
+                <input type="checkbox" id="credit" name="credit" th:field="*{credit}" class="form-check-input mb-2">
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Perform Transaction</button>
+                </div>
+            </form>
+
+            <!-- Messages d'erreur ou de succès pour la transaction -->
+            <div th:if="${param.error}" class="mb-3">
+                <p style="color: red;">Erreur : ${param.error}</p>
+            </div>
+            <div th:if="${param.success}" class="mb-3">
+                <p style="color: green;">Succès : ${param.success}</p>
+            </div>
+        </div>
     </div>
-    <div th:if="${param.success}">
-        <p style="color: green;">Succès : ${param.success}</p>
-    </div>
-
-    <!-- Formulaire pour effectuer une transaction -->
-    <form th:action="@{/transactionbank}" method="post" th:object="${bankTransaction}">
-        <label for="bankAccount">Choisissez le compte bancaire :</label>
-        <select id="bankAccount" name="bankAccount" th:required="true">
-            <option th:each="account : ${userBankAccounts}" th:value="${account.id}" th:text="${account.bankName + ' - ' + account.iban}"></option>
-        </select>
-
-        <label for="amountbank">Montant :</label>
-        <input type="text" id="amountbank" name="amountbank" th:field="*{amountbank}" th:required="true">
-
-        <label for="credit">Crédit :</label>
-        <input type="checkbox" id="credit" name="credit" th:field="*{credit}">
-
-        <button type="submit">Effectuer la transaction</button>
-    </form>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
