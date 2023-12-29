@@ -27,7 +27,7 @@ public class UserController {
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("user", new User());
-        return "login"; // login.html
+        return "login";
     }
 
     @GetMapping("/home")
@@ -54,7 +54,7 @@ public class UserController {
     @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("user", new User());
-        return "register"; // register.html
+        return "register";
     }
 
     @PostMapping("/register")
@@ -74,7 +74,7 @@ public class UserController {
     @GetMapping("/addContact")
     public String showAddContactForm(Model model) {
         model.addAttribute("user", new User());
-        return "addContact"; // addContact.html
+        return "addContact";
     }
 
 
