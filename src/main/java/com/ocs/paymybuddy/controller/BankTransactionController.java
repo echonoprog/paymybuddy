@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -42,27 +43,28 @@ public class BankTransactionController {
 
         model.addAttribute("user", user);
         model.addAttribute("userBankAccounts", userBankAccounts);
-        model.addAttribute("transactionBank", new BankTransaction());
+        model.addAttribute("bankTransaction", new BankTransaction());
         return "transactionbank";
     }
 
     @PostMapping("/transactionbank")
     public String processTransaction(@AuthenticationPrincipal UserDetails userDetails,
                                      @ModelAttribute("bankTransaction") BankTransaction bankTransaction,
-                                     Model model) {
+                                     RedirectAttributes redirectAttributes) {
         try {
-
             BankTransaction savedTransaction = bankTransactionService.save(bankTransaction);
             log.info("Saved transaction details: {}", savedTransaction);
             if (savedTransaction != null) {
-                model.addAttribute("success", "Transaction completed successfully!");
+                redirectAttributes.addFlashAttribute("successTransaction", "Transaction completed successfully!");
             } else {
-                model.addAttribute("error", "Invalid transaction or associated user is null");
+                redirectAttributes.addFlashAttribute("errorTransaction", "Invalid transaction or associated user is null");
             }
         } catch (RuntimeException e) {
             log.error("Failed to process transaction", e);
-            model.addAttribute("error", "Failed to process transaction: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorTransaction", "Failed to process transaction: " + e.getMessage());
         }
         return "redirect:/profile";
     }
+
+
 }

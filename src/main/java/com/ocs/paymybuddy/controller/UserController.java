@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class UserController {
@@ -78,16 +79,24 @@ public class UserController {
 
 
     @PostMapping("/addContact")
-    public String addContact(@AuthenticationPrincipal UserDetails userDetails, @RequestParam("email") String contactEmail, Model model) {
-        try {
-
-            userService.addContact(userDetails, contactEmail);
-            model.addAttribute("success", "Contact added successfully!");
-        } catch (RuntimeException e) {
-            LOGGER.error("Failed to add contact", e);
-            model.addAttribute("error", "Failed to add contact: " + e.getMessage());
+    public String addContact(@AuthenticationPrincipal UserDetails userDetails,
+                             @RequestParam("email") String contactEmail,
+                             RedirectAttributes redirectAttributes) {
+        if (userDetails != null) {
+            try {
+                userService.addContact(userDetails, contactEmail);
+                redirectAttributes.addFlashAttribute("success", "Contact added successfully!");
+            } catch (RuntimeException e) {
+                LOGGER.error("Failed to add contact", e);
+                redirectAttributes.addFlashAttribute("error", "Failed to add contact: " + e.getMessage());
+            }
+            return "redirect:/transfer";
+        } else {
+            LOGGER.warn("Tentative d'ajout de contact par un utilisateur non authentifié.");
+            return "redirect:/login";
         }
-        return "redirect:/transfer";
     }
+
+
 
 }

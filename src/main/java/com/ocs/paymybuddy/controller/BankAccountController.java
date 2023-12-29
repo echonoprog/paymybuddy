@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 @Controller
@@ -50,16 +52,18 @@ public class BankAccountController {
     @PostMapping("/addbankaccount")
     public String addBankAccount(@AuthenticationPrincipal UserDetails userDetails,
                                  @ModelAttribute("bankAccount") BankAccount bankAccount,
-                                 Model model) {
+                                 RedirectAttributes redirectAttributes) {
         try {
             bankAccountService.addBankAccount(userDetails, bankAccount);
-            model.addAttribute("success", "Bank account added successfully!");
+            redirectAttributes.addFlashAttribute("successAddBankAccount", "Bank account added successfully!");
         } catch (RuntimeException e) {
             log.error("Failed to add bank account", e);
-            model.addAttribute("error", "Failed to add bank account: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorAddBankAccount", "Failed to add bank account: " + e.getMessage());
         }
         return "redirect:/profile";
     }
+
+
     @GetMapping("/updateprofile")
     public String showUpdateProfileForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByEmail(userDetails.getUsername());
@@ -70,15 +74,17 @@ public class BankAccountController {
     @PostMapping("/updateprofile")
     public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
                                 @ModelAttribute("user") User updatedUser,
-                                Model model) {
+                                RedirectAttributes redirectAttributes) {
         try {
             userService.updateUser(userDetails.getUsername(), updatedUser);
-            model.addAttribute("success", "Profile updated successfully!");
+            redirectAttributes.addFlashAttribute("successUpdateProfile", "Profile updated successfully!");
         } catch (RuntimeException e) {
             log.error("Failed to update profile", e);
-            model.addAttribute("error", "Failed to update profile: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorUpdateProfile", "Failed to update profile: " + e.getMessage());
         }
         return "redirect:/profile";
     }
+
+
 
 }

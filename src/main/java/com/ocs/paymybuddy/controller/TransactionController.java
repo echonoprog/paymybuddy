@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -45,7 +45,6 @@ public class TransactionController {
             Transaction transaction = new Transaction();
             transaction.setSender(user);
 
-
             Page<Transaction> transactionPage = transactionService.findPaginatedTransactionsByUser(user.getId(), page, 5);
 
             model.addAttribute("user", user);
@@ -59,12 +58,11 @@ public class TransactionController {
         }
     }
 
-
     @PostMapping("/transfer")
-    public String transfer(@AuthenticationPrincipal UserDetails userDetails, @ModelAttribute Transaction transaction) {
+    public String transfer(@AuthenticationPrincipal UserDetails userDetails, @ModelAttribute Transaction transaction,
+                           RedirectAttributes redirectAttributes) {
         if (userDetails != null) {
             try {
-
                 String userEmail = userDetails.getUsername();
                 User sender = userService.findByEmail(userEmail);
 
@@ -78,11 +76,14 @@ public class TransactionController {
                 log.info("Transfert effectué avec succès. Montant: {}, De: {}, À: {}, Description: {}",
                         transaction.getAmount(), transaction.getSender().getEmail(),
                         transaction.getReceiver().getEmail(), transaction.getDescription());
-                return "redirect:/transfer?success";
+
+
+                redirectAttributes.addFlashAttribute("success", "Transaction completed successfully!");
             } catch (Exception e) {
                 log.error("Erreur lors du transfert d'argent.", e);
-                return "redirect:/transfer?error=" + e.getMessage();
+                redirectAttributes.addFlashAttribute("error", "Failed to process transaction: " + e.getMessage());
             }
+            return "redirect:/transfer";
         } else {
             log.warn("Tentative de transfert par un utilisateur non authentifié.");
             return "redirect:/login";

@@ -60,12 +60,14 @@
             </form>
 
             <!-- Messages d'erreur ou de succès pour l'ajout de compte bancaire -->
-            <div th:if="${param.error}" class="mb-3">
-                <p style="color: red;">Erreur : ${param.error}</p>
+            <div th:if="${errorAddBankAccount}" class="mb-3">
+                <p style="color: red;" th:text="${errorAddBankAccount}"></p>
             </div>
-            <div th:if="${param.success}" class="mb-3">
-                <p style="color: green;">Succès : ${param.success}</p>
+            <div th:if="${successAddBankAccount}" class="mb-3">
+                <p style="color: green;" th:text="${successAddBankAccount}"></p>
             </div>
+
+
         </div>
     </div>
 </div>
@@ -90,13 +92,16 @@
                 </div>
             </form>
 
+
             <!-- Messages d'erreur ou de succès pour la mise à jour du profil -->
-            <div th:if="${param.error}" class="mb-3">
-                <p style="color: red;">Erreur : ${param.error}</p>
+            <div th:if="${errorUpdateProfile}" class="mb-3">
+                <p style="color: red;" th:text="${errorUpdateProfile}"></p>
             </div>
-            <div th:if="${param.success}" class="mb-3">
-                <p style="color: green;">Succès : ${param.success}</p>
+            <div th:if="${successUpdateProfile}" class="mb-3">
+                <p style="color: green;" th:text="${successUpdateProfile}"></p>
             </div>
+
+
         </div>
     </div>
 </div>
@@ -126,13 +131,15 @@
                 </div>
             </form>
 
-            <!-- Messages d'erreur ou de succès pour la transaction -->
-            <div th:if="${param.error}" class="mb-3">
-                <p style="color: red;">Erreur : ${param.error}</p>
+            <!-- Messages d'erreur ou de succès pour la transaction bancaire -->
+            <div th:if="${errorTransaction}" class="mb-3">
+                <p style="color: red;" th:text="${errorTransaction}"></p>
             </div>
-            <div th:if="${param.success}" class="mb-3">
-                <p style="color: green;">Succès : ${param.success}</p>
+            <div th:if="${successTransaction}" class="mb-3">
+                <p style="color: green;" th:text="${successTransaction}"></p>
             </div>
+
+
         </div>
     </div>
 </div>
