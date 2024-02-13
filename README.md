@@ -28,3 +28,6 @@ MODELISATION DU DOMAINE :
 
 ----------
 
+MODELE PHYSIQUE DE DONNEES :
+
+![MDP](https://github.com/echonoprog/paymybuddy/assets/103898795/fc390a51-819b-4903-aa20-509be05fe808)
